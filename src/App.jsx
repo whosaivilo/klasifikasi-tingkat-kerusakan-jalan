@@ -15,7 +15,7 @@ function App() {
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
-      alert("Browser kamu tidak mendukung fitur GPS.");
+      alert("Your browser does not support GPS features.");
       return;
     }
     setLoadingGPS(true);
@@ -25,11 +25,11 @@ function App() {
         const lng = position.coords.longitude;
         const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
         setKoordinat(mapsUrl);
-        setAlamat(`Terdeteksi otomatis via GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
+        setAlamat(`Automatically detected via GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
         setLoadingGPS(false);
       },
       (error) => {
-        alert("Gagal mendapatkan lokasi. Pastikan izin GPS (Location) diizinkan di browsermu.");
+        alert("Failed to get location. Please ensure GPS (Location) permission is allowed in your browser.");
         setLoadingGPS(false);
       }
     );
@@ -45,8 +45,8 @@ function App() {
   };
 
   const handlePrediksi = async () => {
-    if (!image) return alert("Pilih foto jalan dulu ya!");
-    if (!alamat) return alert("Alamat jalannya diisi dulu dong!");
+    if (!image) return alert("Please select a road photo first!");
+    if (!alamat) return alert("Please fill in the road address!");
 
     setLoading(true);
     const formData = new FormData();
@@ -60,10 +60,10 @@ function App() {
       if (response.data.success) {
         setHasil(response.data);
       } else {
-        alert("Gagal mendeteksi: " + response.data.error);
+        alert("Failed to detect: " + response.data.error);
       }
     } catch (error) {
-      alert("Error menghubungi server Colab! Pastikan link Ngrok di App.jsx sudah benar dan mesin Colab masih jalan.");
+      alert("Error contacting Colab server! Ensure the Ngrok link in App.jsx is correct and the Colab machine is still running.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -71,15 +71,15 @@ function App() {
   };
 
   const handleLaporWA = () => {
-    const nomorDishub = "6281234567890"; // Ganti dengan nomor tujuan
-    const mapInfo = koordinat ? `\n📍 *Link Peta (GPS):* ${koordinat}` : "";
+    const nomorDishub = "6281234567890"; // Change to destination number
+    const mapInfo = koordinat ? `\n📍 *Map Link (GPS):* ${koordinat}` : "";
     
-    // Logika prioritas
-    let prioritas = "Rendah 🟢";
-    if (hasil.confidence > 0.8) prioritas = "Tinggi 🔴";
-    else if (hasil.confidence > 0.5) prioritas = "Sedang 🟡";
+    // Priority logic
+    let prioritas = "Low 🟢";
+    if (hasil.confidence > 0.8) prioritas = "High 🔴";
+    else if (hasil.confidence > 0.5) prioritas = "Medium 🟡";
 
-    const pesan = `Halo Dishub, saya ingin melaporkan kondisi jalan berikut:\n\n*Status:* ${hasil.label}\n*Prioritas Penanganan:* ${prioritas}\n*Keyakinan AI:* ${(hasil.confidence * 100).toFixed(2)}%\n\n*Lokasi:* ${alamat}${mapInfo}\n\nMohon untuk segera ditindaklanjuti. Terima kasih.`;
+    const pesan = `Hello Authority, I would like to report the following road condition:\n\n*Status:* ${hasil.label}\n*Handling Priority:* ${prioritas}\n*AI Confidence:* ${(hasil.confidence * 100).toFixed(2)}%\n\n*Location:* ${alamat}${mapInfo}\n\nPlease follow up immediately. Thank you.`;
     
     const waUrl = `https://wa.me/${nomorDishub}?text=${encodeURIComponent(pesan)}`;
     window.open(waUrl, '_blank');
@@ -99,18 +99,18 @@ function App() {
               <span className="font-bold text-xl tracking-tight text-white">Road<span className="text-amber-500">AI</span></span>
             </div>
             <div className="hidden md:flex space-x-8">
-              <a href="#beranda" className="text-slate-300 hover:text-amber-400 transition-colors">Beranda</a>
-              <a href="#tentang" className="text-slate-300 hover:text-amber-400 transition-colors">Tentang</a>
-              <a href="#cara-kerja" className="text-slate-300 hover:text-amber-400 transition-colors">Cara Kerja</a>
-              <a href="#deteksi" className="text-slate-300 hover:text-amber-400 transition-colors">Deteksi AI</a>
-              <a href="#tim" className="text-slate-300 hover:text-amber-400 transition-colors">Tim Kami</a>
+              <a href="#home" className="text-slate-300 hover:text-amber-400 transition-colors">Home</a>
+              <a href="#about" className="text-slate-300 hover:text-amber-400 transition-colors">About</a>
+              <a href="#how-it-works" className="text-slate-300 hover:text-amber-400 transition-colors">How it Works</a>
+              <a href="#ai-detection" className="text-slate-300 hover:text-amber-400 transition-colors">AI Detection</a>
+              <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Our Team</a>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="beranda" className="relative min-h-screen flex items-center pt-16">
+      <section id="home" className="relative min-h-screen flex items-center pt-16">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=2000" 
@@ -124,39 +124,39 @@ function App() {
           <div className="max-w-2xl bg-white/10 backdrop-blur-md border border-white/20 p-8 md:p-12 rounded-3xl shadow-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 mb-6 text-sm font-semibold">
               <BrainCircuit className="w-4 h-4" />
-              <span>Didukung oleh MobileNetV2 CNN</span>
+              <span>Powered by MobileNetV2 CNN</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Lapor Jalan Rusak Kini Lebih <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Cerdas dengan AI</span>
+              Report Road Damage <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Smarter with AI</span>
             </h1>
             <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-              Sistem pelaporan infrastruktur pintar yang menganalisis tingkat kerusakan jalan secara otomatis dan langsung terhubung dengan instansi terkait untuk penanganan lebih cepat.
+              A smart infrastructure reporting system that automatically analyzes the level of road damage and connects directly with relevant authorities for faster handling.
             </p>
-            <a href="#deteksi" className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-              Coba Deteksi Sekarang
+            <a href="#ai-detection" className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+              Try Detection Now
               <ArrowRight className="w-5 h-5" />
             </a>
           </div>
         </div>
       </section>
 
-      {/* Tentang Section */}
-      <section id="tentang" className="py-24 bg-slate-900">
+      {/* About Section */}
+      <section id="about" className="py-24 bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="lg:w-1/2">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Mengatasi Masalah Pelaporan yang <span className="text-teal-400">Lambat</span>
+                Solving the Problem of <span className="text-teal-400">Slow Reporting</span>
               </h2>
               <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Selama ini, laporan kerusakan jalan sering kali terhambat karena proses birokrasi yang panjang dan kurangnya validasi visual yang akurat. Masyarakat kesulitan melaporkan, dan pihak berwenang lambat merespons karena data yang tidak terstruktur.
+                Traditionally, road damage reports are often delayed due to lengthy bureaucratic processes and a lack of accurate visual validation. Citizens find it hard to report, and authorities respond slowly due to unstructured data.
               </p>
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300">
                 <h3 className="text-xl font-semibold text-white mb-3 flex items-center gap-2">
-                  <ShieldCheck className="w-6 h-6 text-teal-400" /> Solusi Cerdas Kami
+                  <ShieldCheck className="w-6 h-6 text-teal-400" /> Our Smart Solution
                 </h3>
                 <p className="text-slate-300 leading-relaxed">
-                  Dengan memanfaatkan teknologi <strong className="text-amber-400">Convolutional Neural Network (CNN)</strong> model MobileNetV2, sistem kami dapat mengklasifikasikan jenis kerusakan jalan secara instan. Laporan tervalidasi ini siap dikirimkan formatnya via WhatsApp ke Dinas Perhubungan terkait.
+                  By utilizing <strong className="text-amber-400">Convolutional Neural Network (CNN)</strong> technology with the MobileNetV2 model, our system can classify road damage types instantly. These validated reports are ready to be sent formatted via WhatsApp to the relevant Transportation Authority.
                 </p>
               </div>
             </div>
@@ -172,16 +172,16 @@ function App() {
         </div>
       </section>
 
-      {/* Cara Kerja Section */}
-      <section id="cara-kerja" className="py-24 bg-slate-950 relative overflow-hidden">
+      {/* How it Works Section */}
+      <section id="how-it-works" className="py-24 bg-slate-950 relative overflow-hidden">
         {/* Background Gradients */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Cara Kerja Sistem</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg">Tiga langkah cerdas untuk berkontribusi pada keamanan infrastruktur jalan.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">How the System Works</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg">Three smart steps to contribute to road infrastructure safety.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -192,8 +192,8 @@ function App() {
                 <div className="bg-amber-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-amber-400 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
                   <Camera className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">1. Unggah Foto</h3>
-                <p className="text-slate-400 leading-relaxed">Ambil atau unggah foto jalan yang berlubang, retak, atau mengalami kerusakan lainnya langsung dari gawai Anda.</p>
+                <h3 className="text-2xl font-bold text-white mb-3">1. Upload Photo</h3>
+                <p className="text-slate-400 leading-relaxed">Take or upload a photo of potholes, cracks, or other road damages directly from your device.</p>
               </div>
             </div>
 
@@ -204,8 +204,8 @@ function App() {
                 <div className="bg-teal-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-teal-400 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
                   <BrainCircuit className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">2. Analisis AI</h3>
-                <p className="text-slate-400 leading-relaxed">Model AI canggih kami akan menganalisis foto secara instan untuk mengklasifikasikan jenis dan tingkat kerusakan.</p>
+                <h3 className="text-2xl font-bold text-white mb-3">2. AI Analysis</h3>
+                <p className="text-slate-400 leading-relaxed">Our advanced AI model will instantly analyze the photo to classify the type and severity of the damage.</p>
               </div>
             </div>
 
@@ -216,8 +216,8 @@ function App() {
                 <div className="bg-green-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-green-400 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
                   <Send className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">3. Lapor via WhatsApp</h3>
-                <p className="text-slate-400 leading-relaxed">Sistem membuat draf laporan otomatis berisi lokasi dan deteksi AI untuk dikirimkan langsung ke instansi terkait.</p>
+                <h3 className="text-2xl font-bold text-white mb-3">3. Report via WhatsApp</h3>
+                <p className="text-slate-400 leading-relaxed">The system automatically creates a draft report containing the location and AI detection results to be sent directly to the relevant authority.</p>
               </div>
             </div>
           </div>
@@ -225,11 +225,11 @@ function App() {
       </section>
 
       {/* Deteksi AI Section */}
-      <section id="deteksi" className="py-24 bg-slate-900 relative">
+      <section id="ai-detection" className="py-24 bg-slate-900 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Mulai Deteksi AI</h2>
-            <p className="text-slate-400 text-lg">Unggah foto jalan rusak dan buktikan keakuratan sistem pendeteksi kami.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Start AI Detection</h2>
+            <p className="text-slate-400 text-lg">Upload a photo of a damaged road and prove the accuracy of our detection system.</p>
           </div>
 
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden">
@@ -241,12 +241,12 @@ function App() {
               <div>
                 <label className="block text-slate-200 font-medium mb-3 flex items-center gap-2 text-lg">
                   <MapPin className="w-5 h-5 text-amber-500" />
-                  Alamat / Titik Lokasi
+                  Address / Location Point
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input 
                     type="text" 
-                    placeholder="Contoh: Jl. Sudirman depan halte..."
+                    placeholder="e.g., Sudirman St. near the bus stop..."
                     className="flex-1 bg-slate-900/60 border border-slate-700/50 text-white p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500/50 transition-all placeholder:text-slate-500 shadow-inner"
                     value={alamat}
                     onChange={(e) => { setAlamat(e.target.value); setKoordinat(null); }}
@@ -257,7 +257,7 @@ function App() {
                     className="sm:w-auto px-6 py-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl font-medium text-white flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                   >
                     <Navigation className={`w-5 h-5 ${loadingGPS ? 'animate-pulse text-amber-500' : 'text-teal-400'}`} />
-                    {loadingGPS ? 'Melacak...' : 'Pakai GPS'}
+                    {loadingGPS ? 'Tracking...' : 'Use GPS'}
                   </button>
                 </div>
               </div>
@@ -266,7 +266,7 @@ function App() {
               <div>
                 <label className="block text-slate-200 font-medium mb-3 flex items-center gap-2 text-lg">
                   <Camera className="w-5 h-5 text-teal-400" />
-                  Foto Jalan
+                  Road Photo
                 </label>
                 <div className="relative group">
                   <div className={`border-2 border-dashed ${preview ? 'border-teal-500/50 bg-teal-500/5' : 'border-slate-600 bg-slate-900/60 group-hover:border-amber-500/50 group-hover:bg-amber-500/5'} rounded-2xl p-8 text-center transition-all duration-300 shadow-inner`}>
@@ -281,7 +281,7 @@ function App() {
                       <div className="flex flex-col items-center">
                         <img src={preview} alt="Preview" className="max-h-72 rounded-xl shadow-lg border border-white/10 mb-4 object-contain" />
                         <span className="text-teal-400 text-sm font-medium flex items-center gap-1 bg-teal-500/10 px-4 py-2 rounded-full">
-                          <CheckCircle2 className="w-4 h-4" /> Foto terpilih. Klik/drop untuk mengganti.
+                          <CheckCircle2 className="w-4 h-4" /> Photo selected. Click/drop to replace.
                         </span>
                       </div>
                     ) : (
@@ -289,8 +289,8 @@ function App() {
                         <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                           <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-amber-400 transition-colors" />
                         </div>
-                        <p className="text-white font-medium text-lg mb-2">Klik atau Drag & Drop foto ke sini</p>
-                        <p className="text-slate-500 text-sm">Mendukung format JPG, PNG (Maks. 5MB)</p>
+                        <p className="text-white font-medium text-lg mb-2">Click or Drag & Drop photo here</p>
+                        <p className="text-slate-500 text-sm">Supports JPG, PNG formats (Max. 5MB)</p>
                       </div>
                     )}
                   </div>
@@ -310,12 +310,12 @@ function App() {
                 {loading ? (
                   <>
                     <BrainCircuit className="w-6 h-6 animate-pulse" />
-                    Sedang Menganalisis...
+                    Analyzing...
                   </>
                 ) : (
                   <>
                     <BrainCircuit className="w-6 h-6" />
-                    Deteksi Kerusakan Jalan
+                    Detect Road Damage
                   </>
                 )}
               </button>
@@ -328,37 +328,37 @@ function App() {
                   
                   <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2 border-b border-white/10 pb-4">
                     <AlertTriangle className="w-6 h-6 text-amber-500" />
-                    Hasil Analisis AI
+                    AI Analysis Result
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 relative z-10">
                     <div className="bg-slate-900/60 p-5 rounded-xl border border-white/5 shadow-inner">
-                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">Status Jalan</p>
+                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">Road Status</p>
                       <p className="text-2xl font-bold text-amber-400">{hasil.label}</p>
                     </div>
                     
                     <div className="bg-slate-900/60 p-5 rounded-xl border border-white/5 shadow-inner">
-                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">Prioritas</p>
+                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">Priority</p>
                       {hasil.confidence > 0.8 ? (
                         <div className="inline-flex items-center gap-2 bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg border border-red-500/30">
                           <span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
-                          <span className="font-bold text-lg">Tinggi</span>
+                          <span className="font-bold text-lg">High</span>
                         </div>
                       ) : hasil.confidence > 0.5 ? (
                         <div className="inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-400 px-3 py-1.5 rounded-lg border border-yellow-500/30">
                           <span className="h-3 w-3 rounded-full bg-yellow-500"></span>
-                          <span className="font-bold text-lg">Sedang</span>
+                          <span className="font-bold text-lg">Medium</span>
                         </div>
                       ) : (
                         <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-400 px-3 py-1.5 rounded-lg border border-green-500/30">
                           <span className="h-3 w-3 rounded-full bg-green-500"></span>
-                          <span className="font-bold text-lg">Rendah</span>
+                          <span className="font-bold text-lg">Low</span>
                         </div>
                       )}
                     </div>
 
                     <div className="bg-slate-900/60 p-5 rounded-xl border border-white/5 shadow-inner">
-                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">Akurasi AI</p>
+                      <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider font-semibold">AI Accuracy</p>
                       <div className="flex items-center gap-4">
                         <p className="text-2xl font-bold text-white">{(hasil.confidence * 100).toFixed(1)}%</p>
                         <div className="flex-1 h-2.5 bg-slate-800 rounded-full overflow-hidden hidden lg:block">
@@ -376,7 +376,7 @@ function App() {
                     className="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-white rounded-xl font-bold flex justify-center items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] hover:scale-[1.02] z-10 relative border border-teal-400/50"
                   >
                     <Send className="w-5 h-5" />
-                    Laporkan ke Dishub via WhatsApp
+                    Report to Authority via WhatsApp
                   </button>
                 </div>
               )}
@@ -386,11 +386,11 @@ function App() {
       </section>
 
       {/* Tim Pengembang Section */}
-      <section id="tim" className="py-24 bg-slate-950">
+      <section id="team" className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Tim Pengembang</h2>
-            <p className="text-slate-400 text-lg">Kolaborasi inovasi mahasiswa untuk infrastruktur yang lebih baik.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Development Team</h2>
+            <p className="text-slate-400 text-lg">Student innovation collaboration for better infrastructure.</p>
           </div>
 
           <div className="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
@@ -406,7 +406,7 @@ function App() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-1">Developer 1</h3>
               <p className="text-teal-400 font-medium mb-4 tracking-wide">AI & Backend Developer</p>
-              <p className="text-slate-400 text-sm leading-relaxed">Merancang arsitektur CNN MobileNetV2 dan integrasi API Backend.</p>
+              <p className="text-slate-400 text-sm leading-relaxed">Designing the MobileNetV2 CNN architecture and Backend API integration.</p>
             </div>
 
             {/* Profile 2 */}
@@ -421,13 +421,13 @@ function App() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-1">Developer 2</h3>
               <p className="text-amber-400 font-medium mb-4 tracking-wide">Frontend & UI/UX Designer</p>
-              <p className="text-slate-400 text-sm leading-relaxed">Membangun interaktivitas SPA dengan pendekatan Glassmorphism.</p>
+              <p className="text-slate-400 text-sm leading-relaxed">Building SPA interactivity with a Glassmorphism approach.</p>
             </div>
           </div>
 
           <div className="mt-16 text-center">
             <div className="inline-block bg-slate-900/80 backdrop-blur-md border border-white/10 px-10 py-5 rounded-2xl shadow-xl hover:bg-slate-800 transition-colors">
-              <p className="text-slate-300 font-medium text-lg">Mahasiswa Program Studi Sistem Informasi</p>
+              <p className="text-slate-300 font-medium text-lg">Information Systems Study Program Students</p>
               <p className="text-teal-400 font-bold text-xl mt-1 tracking-wide">Politeknik Caltex Riau</p>
             </div>
           </div>
@@ -444,11 +444,11 @@ function App() {
             <span className="font-bold text-xl text-white">Road<span className="text-amber-500">AI</span></span>
           </div>
           <p className="text-slate-500 text-sm text-center md:text-left">
-            &copy; {new Date().getFullYear()} Sistem Pelapor Kerusakan Jalan. All rights reserved.
+            &copy; {new Date().getFullYear()} Road Damage Reporting System. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-slate-500 hover:text-white transition-colors">Privasi</a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors">Ketentuan</a>
+            <a href="#" className="text-slate-500 hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="text-slate-500 hover:text-white transition-colors">Terms</a>
           </div>
         </div>
       </footer>

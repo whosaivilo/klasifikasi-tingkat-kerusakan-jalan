@@ -27,6 +27,7 @@ function App() {
         setKoordinat(mapsUrl);
         setAlamat(`Automatically detected via GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
         setLoadingGPS(false);
+        alert("Location successfully detected! For your privacy, don't forget to disable location access in your browser settings if you no longer need it.");
       },
       (error) => {
         alert("Failed to get location. Please ensure GPS (Location) permission is allowed in your browser.");

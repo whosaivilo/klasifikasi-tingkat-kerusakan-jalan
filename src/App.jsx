@@ -27,7 +27,6 @@ function App() {
         setKoordinat(mapsUrl);
         setAlamat(`Automatically detected via GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
         setLoadingGPS(false);
-        alert("Location successfully detected! For your privacy, don't forget to disable location access in your browser settings if you no longer need it.");
       },
       (error) => {
         alert("Failed to get location. Please ensure GPS (Location) permission is allowed in your browser.");
@@ -289,6 +288,10 @@ function App() {
                     {loadingGPS ? 'Tracking...' : 'Use GPS'}
                   </button>
                 </div>
+                <p className="text-amber-500/90 text-sm mt-3 flex items-center gap-1.5 bg-amber-500/10 w-fit px-3 py-1.5 rounded-lg border border-amber-500/20">
+                  <AlertTriangle className="w-4 h-4" />
+                  Privacy Tip: Please disable location access in your browser when not in use.
+                </p>
               </div>
 
               {/* Drag and Drop Box */}

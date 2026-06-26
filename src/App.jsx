@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Camera, BrainCircuit, Send, ArrowRight, ShieldCheck, AlertTriangle, UploadCloud, MapPin, CheckCircle2, Navigation } from 'lucide-react';
+import { Camera, BrainCircuit, Send, ArrowRight, ShieldCheck, AlertTriangle, UploadCloud, MapPin, CheckCircle2, Navigation, Info } from 'lucide-react';
 
 function App() {
   // UBAH DENGAN LINK NGROK KAMU (Tanpa akhiran /predict)
@@ -54,7 +54,10 @@ function App() {
 
     try {
       const response = await axios.post(`${NGROK_URL}/predict`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'ngrok-skip-browser-warning': 'true'
+        }
       });
       
       if (response.data.success) {
@@ -67,6 +70,31 @@ function App() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getKnowledge = (label) => {
+    const lowerLabel = label.toLowerCase();
+    if (lowerLabel.includes("mulus") || lowerLabel.includes("baik") || lowerLabel.includes("good") || lowerLabel.includes("smooth") || lowerLabel.includes("normal")) {
+      return {
+        title: "Good Road Condition",
+        desc: "This road is in good condition and does not require immediate repair. Please continue to drive safely, always wear a helmet, and obey traffic rules."
+      };
+    } else if (lowerLabel.includes("lubang") || lowerLabel.includes("pothole")) {
+      return {
+        title: "Pothole Cause Analysis",
+        desc: "Potholes are usually caused by water trapped under the asphalt, which expands and contracts, weakening the road structure. High traffic load then breaks the surface."
+      };
+    } else if (lowerLabel.includes("retak") || lowerLabel.includes("crack")) {
+      return {
+        title: "Cracked Road Analysis",
+        desc: "Road cracks are often early signs of structural failure due to temperature changes, poor drainage, or excessive vehicle weight. If left untreated, they can develop into potholes."
+      };
+    } else {
+      return {
+        title: "General Maintenance Info",
+        desc: "Any sign of road degradation should be monitored. Weather changes and heavy traffic are the main contributors to road surface wear."
+      };
     }
   };
 
@@ -369,6 +397,16 @@ function App() {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="bg-slate-900/60 p-5 rounded-xl border border-white/5 shadow-inner mb-6">
+                    <h4 className="text-teal-400 font-bold flex items-center gap-2 mb-2">
+                      <Info className="w-5 h-5" />
+                      {getKnowledge(hasil.label).title}
+                    </h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      {getKnowledge(hasil.label).desc}
+                    </p>
                   </div>
 
                   <button 
